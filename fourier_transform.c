@@ -17,29 +17,33 @@ int main() {
     }
     sigX[smp] = 0;  // 最後に入力された10000以上の値を削除
 
-    tmp1 = smp % 2; // アダマール行列の行列数を決定（n = 2^m）
-    tmp1 += smp / 2;
-    smp = (int)pow(2, tmp1);
+
+    for (int i = 0; tmp1 < smp; i++) {  // アダマール行列の行数・列数を決定（n = 2^m）
+        tmp1 = (int)pow(2, i);
+        printf("i = %d\n", i);
+    }
+    smp = tmp1;
+    printf("smp = %d\n", smp);    // smpの値確認
+
 
     int sigY[smp][smp]; // アダマール行列を代入する配列
+    double cor[smp];    // フーリエ変換後の相関値を代入する配列
 
-    printf("smp = %d\n", smp);    // smpの値確認
 
     for (int i = 0; i < smp; i++) { // アダマール行列の作成
         for (int j = 0; j < smp; j++) {
             mul = 0;
             tmp2 = i & j;
-            printf("%d%d , tmp2 = %d\n", i, j, tmp2);
+            printf("%d %d , tmp2 = %d\n", i, j, tmp2);   // 乗数の計算過程
             for (int k = 0; tmp2 > 0; k++) {
                 mul += tmp2 % 2;
                 tmp2 /= 2;
             }
-            printf("mul = %d\n", mul);
+            printf("mul = %d\n", mul);  // 乗数の計算結果
             sigY[i][j] = (int)pow(-1, mul);
             }
     }
 
-    double cor[smp];    // フーリエ変換後の相関値を代入する配列
 
     for (int i = 0; i < smp; i++) { // 相関を求める
         cor[i] = 0;
@@ -49,9 +53,8 @@ int main() {
         cor[i] /= smp;
     }
 
-    printf("smp = %d\n", smp);
 
-   printf("\n==入力信号==\n");
+    printf("\n==入力信号==\n");
     for (int i = 0; i < smp; i++) {
         printf("%d\n", sigX[i]);
     }
