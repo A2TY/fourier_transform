@@ -3,11 +3,12 @@
 
 int main() {
 
-    double cor[100] = {0};    // 入力信号
+    double cor[100] = {0};  // 入力信号
     int smp = 0;            // 入力信号のサンプリング数
     int mul = 0;            // 乗数
     int tmp1;               // アダマール行列作成時の途中計算（行列数の決定）
     int tmp2;               // アダマール行列作成時の途中計算（論理積）
+
 
     printf("信号を入力（10000以上を入力して入力終了）\n");    // フーリエ変換する信号を入力
     for (int i = 0; cor[smp] < 10000; i++, smp = i - 1) {
@@ -16,12 +17,12 @@ int main() {
     }
     cor[smp] = 0;  // 最後に入力された10000以上の値を削除
 
+
     for (int i = 0; tmp1 < smp; i++) {  // アダマール行列の行数・列数を決定（n = 2^m）
         tmp1 = (int)pow(2, i);
-        // printf("i = %d\n", i);
     }
     smp = tmp1;
-    // printf("smp = %d\n", smp);    // smpの値確認
+
 
     int sigY[smp][smp]; // アダマール行列を代入する配列
     double sigX[smp];   // フーリエ逆変換後の相関値を代入する配列
@@ -31,25 +32,24 @@ int main() {
         for (int j = 0; j < smp; j++) {
             mul = 0;
             tmp2 = i & j;
-            // printf("%d %d , tmp2 = %d\n", i, j, tmp2);   // 乗数の計算過程
             for (int k = 0; tmp2 > 0; k++) {
                 mul += tmp2 % 2;
                 tmp2 /= 2;
             }
-            // printf("mul = %d\n", mul);  // 乗数の計算結果
             sigY[i][j] = (int)pow(-1, mul);
-            //printf("sigY[%d][%d] = %d\n", i, j, sigY[i][j]);
             }
     }
 
 
-    for (int i = 0; i < 4; i++) {   // フーリエ逆変換
-        for (int j = 0; j < 4; j++) {
+    for (int i = 0; i < smp; i++) {   // フーリエ逆変換
+        sigX[i] = 0;
+        for (int j = 0; j < smp; j++) {
             sigX[i] += cor[j] * sigY[j][i];
         }
     }
 
-    printf("\n==入力信号==\n");
+
+    printf("\n==相関値==\n");
     for (int i = 0; i < smp; i++) {
         printf("%9f\n", cor[i]);
     }
@@ -63,7 +63,7 @@ int main() {
         printf("\n");
     }
 
-    printf("\n==相関値==\n");
+    printf("\n==出力信号==\n");
     for (int i = 0; i < smp; i++) {
         printf("%9f\n", sigX[i]);
     }
